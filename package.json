@@ -24,7 +24,7 @@
     "test": "jest --passWithNoTests --runInBand --no-watchAll",
     "test:watch": "yarn test --watchAll",
     "test:staged": "yarn test --findRelatedTests",
-    "test:coverage": "yarn test` --coverage",
+    "test:coverage": "yarn test --coverage",
     "test:ci": "yarn jest --ci --coverage",
     "prepare:husky": "husky init",
     "pre:commit": "lint-staged",
