@@ -1,7 +1,18 @@
+interface CryptoConfig {
+  publicKey?: string
+  privateKey?: string
+}
+
+
 class Crypto {
   private textEncoder = new TextEncoder();
+  private publicKeyPEM?: string;
+  private privateKeyPEM?: string;
 
-  constructor() {}
+  constructor(config: CryptoConfig) {
+    this.publicKeyPEM = config?.publicKey;
+    this.privateKeyPEM = config?.privateKey;
+  }
 
   /**
    * Decrypts data using a private key.
@@ -9,8 +20,12 @@ class Crypto {
    * @param encryptedHexPairs - The encrypted data in the form of hexadecimal pairs.
    * @returns The decrypted data as a string.
    */
-  public async decrypt(privateKeyPEM: string, encryptedHexPairs: string): Promise<string> {
-    const privateKey = await this.importPrivateKey(privateKeyPEM);
+  public async decrypt(encryptedHexPairs: string): Promise<string> {
+
+    if (!this.privateKeyPEM) {
+      throw new Error("Private key not provided.");
+    }
+    const privateKey = await this.importPrivateKey(this.privateKeyPEM);
 
     // Convert hexadecimal pairs back to an array of bytes
     const encryptedHexArray: number[] = [];
@@ -23,7 +38,7 @@ class Crypto {
     // Decrypt the data using the private key
     const decryptedData = await crypto.subtle.decrypt(
       {
-        name: "RSA-OAEP",
+        name: "RSAES-PKCS1-v1_5",
       },
       privateKey,
       encryptedData
@@ -39,8 +54,13 @@ class Crypto {
    * @param data - The data to be encrypted.
    * @returns The encrypted data represented as hexadecimal pairs.
    */
-  public async encrypt(publicKeyPEM: string, data: string): Promise<string> {
-    const publicKey = await this.importPublicKey(publicKeyPEM);
+  public async encrypt(data: string): Promise<string> {
+
+    if (!this.publicKeyPEM) {
+      throw new Error("Public key not provided.");
+    }
+
+    const publicKey = await this.importPublicKey(this.publicKeyPEM);
 
     // Encode the data
     const encodedData = this.textEncoder.encode(data);
@@ -48,12 +68,14 @@ class Crypto {
     // Encrypt the data using the public key
     const encryptedData = await crypto.subtle.encrypt(
       {
-        name: "RSA-OAEP",
+        name: "RSAES-PKCS1-v1_5",
       },
       publicKey,
       encodedData
     );
 
+
+    console.log("encryptedData", encryptedData)
     // Convert the encrypted data to hexadecimal pairs
     const encryptedHexArray = new Uint8Array(encryptedData);
     const encryptedHexPairs: string[] = [];
@@ -100,7 +122,7 @@ class Crypto {
       "spki",
       publicKeyData,
       {
-        name: "RSA-OAEP",
+        name: "RSAES-PKCS1-v1_5",
         hash: { name: "SHA-256" },
       },
       true,
@@ -123,7 +145,7 @@ class Crypto {
       "pkcs8",
       privateKeyData,
       {
-        name: "RSA-OAEP",
+        name: "RSAES-PKCS1-v1_5",
         hash: { name: "SHA-256" },
       },
       true,
