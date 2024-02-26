@@ -1,0 +1,64 @@
+{
+  "name": "@bmg/arqf-crypto",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "yarn clean && tsup",
+    "bump:check": "yarn version check",
+    "bump:next": "yarn version apply --all --prerelease",
+    "bump:stable": "yarn version apply --all",
+    "publish:next": "yarn bump:check && yarn bump:next && npm run build && yarn publish:artifacts",
+    "publish:stable": "npm run build && yarn bump:stable && yarn publish:artifacts",
+    "publish:artifacts": "npm publish --registry='http://nexus-prd/repository/npm-prereleases/'",
+    "clean": "rm -rf dist",
+    "reset": "yarn clean && rm -rf node_modules .yarn/cache",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "yarn lint --fix",
+    "test": "jest --passWithNoTests --runInBand --no-watchAll",
+    "test:watch": "yarn test --watchAll",
+    "test:staged": "yarn test --findRelatedTests",
+    "test:coverage": "yarn test` --coverage",
+    "test:ci": "yarn jest --ci --coverage",
+    "prepare:husky": "husky init",
+    "pre:commit": "lint-staged",
+    "pre:push": "yarn test:coverage && yarn lint && yarn types:check && yarn bump:check",
+    "types:check": "tsc --skipLibCheck --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juniorconquista/crypto.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/juniorconquista/crypto/issues"
+  },
+  "homepage": "https://github.com/juniorconquista/crypto#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^18.6.1",
+    "@commitlint/config-conventional": "^18.6.2",
+    "@inrupt/jest-jsdom-polyfills": "^3.2.1",
+    "@types/eslint": "^8",
+    "@types/jest": "^29.5.12",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/parser": "^7.0.2",
+    "eslint": "^8.56.0",
+    "husky": "^9.0.11",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.2.5",
+    "ts-jest": "^29.1.2",
+    "tsup": "^8.0.2",
+    "typescript": "^5.3.3"
+  },
+  "packageManager": "yarn@4.0.2"
+}
