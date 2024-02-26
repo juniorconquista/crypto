@@ -1,17 +1,15 @@
-interface CryptoConfig {
-  publicKey?: string
-  privateKey?: string
-}
-
+import { CryptoConfig, Algorithm } from "./crypto.types";
 
 class Crypto {
   private textEncoder = new TextEncoder();
   private publicKeyPEM?: string;
   private privateKeyPEM?: string;
+  private algorithm?: Algorithm;
 
   constructor(config: CryptoConfig) {
     this.publicKeyPEM = config?.publicKey;
     this.privateKeyPEM = config?.privateKey;
+    this.algorithm = config?.algorithm ?? "RSAES-PKCS1-v1_5";
   }
 
   /**
@@ -21,7 +19,6 @@ class Crypto {
    * @returns The decrypted data as a string.
    */
   public async decrypt(encryptedHexPairs: string): Promise<string> {
-
     if (!this.privateKeyPEM) {
       throw new Error("Private key not provided.");
     }
@@ -38,7 +35,7 @@ class Crypto {
     // Decrypt the data using the private key
     const decryptedData = await crypto.subtle.decrypt(
       {
-        name: "RSAES-PKCS1-v1_5",
+        name: this.algorithm as string,
       },
       privateKey,
       encryptedData
@@ -55,7 +52,6 @@ class Crypto {
    * @returns The encrypted data represented as hexadecimal pairs.
    */
   public async encrypt(data: string): Promise<string> {
-
     if (!this.publicKeyPEM) {
       throw new Error("Public key not provided.");
     }
@@ -68,14 +64,12 @@ class Crypto {
     // Encrypt the data using the public key
     const encryptedData = await crypto.subtle.encrypt(
       {
-        name: "RSAES-PKCS1-v1_5",
+        name: this.algorithm as string,
       },
       publicKey,
       encodedData
     );
 
-
-    console.log("encryptedData", encryptedData)
     // Convert the encrypted data to hexadecimal pairs
     const encryptedHexArray = new Uint8Array(encryptedData);
     const encryptedHexPairs: string[] = [];
@@ -122,7 +116,7 @@ class Crypto {
       "spki",
       publicKeyData,
       {
-        name: "RSAES-PKCS1-v1_5",
+        name: this.algorithm as string,
         hash: { name: "SHA-256" },
       },
       true,
@@ -145,7 +139,7 @@ class Crypto {
       "pkcs8",
       privateKeyData,
       {
-        name: "RSAES-PKCS1-v1_5",
+        name: this.algorithm as string,
         hash: { name: "SHA-256" },
       },
       true,
