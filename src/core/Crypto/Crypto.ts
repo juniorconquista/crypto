@@ -7,9 +7,9 @@ class Crypto {
   private algorithm?: Algorithm;
 
   constructor(config: CryptoConfig) {
-    this.publicKeyPEM = config?.publicKey;
-    this.privateKeyPEM = config?.privateKey;
-    this.algorithm = config?.algorithm ?? "RSAES-PKCS1-v1_5";
+    this.publicKeyPEM = config.publicKey;
+    this.privateKeyPEM = config.privateKey;
+    this.algorithm = config.algorithm ?? "RSA-OAEP";
   }
 
   /**

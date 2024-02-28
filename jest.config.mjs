@@ -5,7 +5,7 @@ export default {
     "!<rootDir>/src/**/index.ts",
     "!**/*.d.ts",
   ],
-  testEnvironment: 'node',
+  testEnvironment: 'jest-environment-jsdom',
   coverageDirectory: "coverage",
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   testPathIgnorePatterns: ["<rootDir>/node_modules/"],

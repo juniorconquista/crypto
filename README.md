@@ -1,217 +1,206 @@
-# Feature toggle permissions
+# Crypto
 
-A nossa biblioteca de Feature Toggle e Permissionamento é uma ferramenta essencial para desenvolvedores que desejam implementar controle flexível sobre o comportamento do software e gerenciar permissões de acesso de forma eficaz. Com ela, é possível habilitar ou desabilitar recursos em tempo real, realizar testes e experimentações com facilidade, garantir um controle preciso sobre o lançamento de novas funcionalidades e personalizar a experiência do usuário com segmentação inteligente. Integre facilmente a nossa biblioteca em seus projetos, aproveitando os benefícios de uma distribuição simplificada e um processo de publicação automatizado.
+A nossa biblioteca de criptografia é uma biblioteca JavaScript/TypeScript que oferece uma interface simplificada para operações de criptografia e descriptografia de dados usando o algoritmo `RSA-OAEP`. Com a capacidade de proteger dados sensíveis de forma eficaz e segura, esta biblioteca é ideal para aplicativos que requerem comunicação segura entre cliente e servidor, armazenamento de informações confidenciais em bancos de dados e muito mais.
 
 ## 🚀 Primeiros passos
 
-Instale `@bmg/arqf-feature-toggle-permission` usando qualquer gerenciador de pacotes.
+Instale `@bmg/arqf-crypto` usando qualquer gerenciador de pacotes.
 
 ```sh
-$ yarn add @bmg/arqf-feature-toggle-permission
+$ yarn add @bmg/arqf-crypto
 # or
-$ npm i @bmg/arqf-feature-toggle-permission
+$ npm i @bmg/arqf-crypto
 ```
 
-## 🏗️ Componentes, hooks e funções
+## ⚙️ Como configurar
 
-> `PermissionsProvider`
+Para começar, você precisará gerar um par de chaves pública e privada.
+Você pode gerar um par de chaves RSA usando várias ferramentas e bibliotecas. Uma opção comum é usar o OpenSSL. Aqui está um guia passo a passo sobre como fazer isso:
 
-O **PermissionsProvider** fornece uma estrutura centralizada para gerenciamento de permissões dentro de aplicativos React. Ao envolver sua aplicação com o **PermissionsProvider**, você pode controlar dinamicamente o acesso a recursos e funcionalidades com facilidade, garantindo uma experiência segura e personalizada para os usuários.
+### Gerando a chave privada
 
-| Propriedades | Tipo                          | Descrição                                   |
-| ------------ | ----------------------------- | ------------------------------------------- |
-| children     | `React.ReactNode` obrigatório | O conteúdo do provedor.                     |
-| permissions  | `Permissions`                 | Objeto de permissões e recursos do usuário. |
+```bash
+openssl genrsa -f4 -out private.pem 4096
+```
 
-> `Can`
+Este comando irá gerar a chave privada e armazená-la no arquivo `private_key.pem`.
 
-O **Can** é um componente fundamental da nossa biblioteca. Ele permite verificação condicional de permissões dentro de aplicativos React. Com o **Can**, você pode controlar dinamicamente a visibilidade de componentes com base nas permissões do usuário, garantindo uma experiência de usuário personalizada e segura.
+### Gerando a chave pública
 
-| Propriedades | Tipo                                    | Descrição                                                                       |
-| ------------ | --------------------------------------- | ------------------------------------------------------------------------------- |
-| children     | `React.ReactNode` obrigatório           | O conteúdo que deve ser exibido caso o usuário tenha permissão enviada.         |
-| context      | `string` obrigatório                    | Contexto onde o recurso ou permissão será aplicado.                             |
-| action       | `create` `update` `destroy` obrigatório | Ação que será executada de acordo com o contexto informado.                     |
-| no           | `React.ReactNode`                       | O conteúdo que deverá ser exibido caso o usuário não tenha a permissão enviada. |
+```bash
+openssl rsa -in private.pem -outform pem -pubout -out public.pem
+```
 
-> `Hooks`
+Este comando irá extrair a chave pública do arquivo `private_key.pem` e armazená-la no arquivo `public_key.pem`.
 
-O `usePermissions` é um hook essencial disponibilizado pela nossa biblioteca. Ele oferece uma maneira flexível de configurar e validar permissões dinamicamente dentro de aplicativos React, permitindo um controle preciso sobre o acesso a recursos e funcionalidades.
+**IMPORTANTE:** É fundamental adotar práticas de segurança ao lidar com chaves privadas. Recomendamos enfaticamente que você trafegue chaves privadas apenas por canais seguros e as armazene de forma criptografada, preferencialmente com uma senha e utilizando um método robusto de criptografia, como AES. Isso ajuda a garantir a confidencialidade das chaves e a proteger contra acessos não autorizados.
 
-| Utilitário        | Descrição                                                                                                                                                                                                                                                                                                                 |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| updatePermissions | Este utilitário permite atualizar dinamicamente as permissões dentro do seu aplicativo. Com ele, você pode alterar as permissões do usuário em tempo real, garantindo uma experiência de usuário sempre atualizada e relevante.                                                                                           |
-| can               | O utilitário `can` oferece uma forma simples e direta de realizar verificações de permissões fora do contexto de renderização de componentes. Você pode usar este utilitário para realizar verificações de permissões em qualquer lugar do seu código, tornando-o flexível e adaptável às necessidades do seu aplicativo. |
-| permissions       | O utilitário `permissions` fornece acesso às permissões atuais do usuário. Você pode usar este utilitário para consultar e verificar as permissões do usuário em qualquer parte do seu aplicativo, garantindo uma lógica coesa e consistente em toda a aplicação.                                                         |
+## 🛡️ Crypto
 
-Com o hook `usePermissions` e seus utilitários, você pode criar aplicativos React altamente flexíveis e dinâmicos, proporcionando uma experiência de usuário sob medida e segura.
+A classe `Crypto` fornece funcionalidades de criptografia para garantir a segurança dos dados em sua aplicação. Com o `Crypto`, você pode facilmente realizar operações de criptografia e descriptografia usando o algoritmo `RSA-OAEP`.
 
-> `Funções`
-
-A função `canHandler` é um utilitário projetado para realizar validações de permissões fora do contexto do React. Com configurações simples, como ação, contexto e opções de callbacks, é possível determinar se um usuário possui determinada permissão e executar lógica personalizada com base nisso. Essa função oferece flexibilidade para realizar verificações a nível de serviço, garantindo controle sobre o acesso a recursos e funcionalidades.
-
-| Parâmetros  | Tipo                                      | Descrição                                                                      |
-| ----------- | ----------------------------------------- | ------------------------------------------------------------------------------ |
-| context     | `string` obrigatório                      | Contexto onde o recurso ou permissão será aplicado.                            |
-| action      | `create` `update` `destroy` obrigatório   | Ação que será executada de acordo com o contexto informado.                    |
-| options     | `{ yes?: () => void; not?: () => void; }` | Opções de retorno de chamada em caso de obtenção ou não da permissão desejada. |
-| permissions | `Permissions`                             | Objeto de permissões e recursos do usuário.                                    |
+| Propriedades | Tipo       | Descrição                                                  |
+| ------------ | ---------- | ---------------------------------------------------------- |
+| publicKey    | `string`   | A chave pública no formato PEM.                            |
+| privateKey   | `string`   | A chave privada no formato PEM.                            |
+| algorithm    | `RSA-OAEP` | (Opcional) O algoritmo de criptografia (padrão: RSA-OAEP). |
 
 ## 💻 Uso
 
-Nossa biblioteca está dividida em dois tipos de uso distintos. O primeiro é especificamente projetado para integração em projetos React, enquanto o segundo oferece uma função utilitária para uso independente do contexto do React, adequado, por exemplo, para implementação em serviços individuais.
+Para usar a biblioteca `Crypto` em seu projeto React, primeiro você precisa instanciar um objeto `Crypto` com as chaves pública e privada. Em seguida, você pode usar os métodos `encrypt` e `decrypt` para criptografar e descriptografar seus dados.
 
-### Uso dentro de um Projeto React
-
-Para começar, vamos nos concentrar no uso dentro do ambiente React. A integração da nossa biblioteca começa configurando o provedor de permissões, o qual é exportado pelo ponto de entrada da nossa biblioteca. Isso pode ser realizado da seguinte maneira:
+### Uso basico dentro de um Projeto React
 
 ```jsx
-import React from "react";
-import { BrowserRouter } from "react-router-dom";
-import { ThemeProvider } from "@bmg-genesis/styles";
-import { PermissionsProvider } from "@bmg/arqf-feature-toggle-permission";
+import React, { useState } from "react";
+import { Crypto } from "@bmg-genesis/crypto";
+import { Button, Text } from "@bmg-genesis/components";
 
-import { ProxyRoute } from "@/main/proxies";
+const publicKeyPEM = `-----BEGIN PUBLIC KEY-----\n...`;
+const privateKeyPEM = `-----BEGIN PRIVATE KEY-----\n...`;
 
-const Router: React.FC = () => (
-  <PermissionsProvider>
-    <ThemeProvider theme="base">
-      <BrowserRouter>
-        <ProxyRoute />
-      </BrowserRouter>
-    </ThemeProvider>
-  </PermissionsProvider>
-);
+const MyComponent:React.FC = () => {
+  const [crypto] = useState(
+    new Crypto({ publicKey: publicKeyPEM, privateKey: privateKeyPEM })
+  );
+  const [encryptedData, setEncryptedData] = useState("");
+  const [decryptedData, setDecryptedData] = useState("");
 
-export default Router;
-```
+  const handleEncrypt = async () => {
+    const data = "Dados confidenciais";
+    const encrypted = await crypto.encrypt(data);
+    setEncryptedData(encrypted);
+  };
 
-Ao configurar o provedor de permissões dessa maneira, você estará pronto para utilizar as funcionalidades oferecidas pela nossa biblioteca dentro do seu aplicativo React.
-
-Após configurar o `PermissionProvider`, você estará pronto para utilizar o componente `Can` em qualquer lugar de sua aplicação. O `Can` é um componente de primeira ordem que verifica de forma condicional se o usuário tem permissão para acessar determinado recurso, de acordo com a `action` e o `context` de permissão fornecidos.
-
-Suponha que tenhamos um botão que só deve ser exibido se o usuário tiver permissão para `criar` um novo `pix`. Sua implementação seria da seguinte forma:
-
-```jsx
-import React from "react";
-import { Button } from "@bmg-genesis/components";
-import { Can } from "@bmg/arqf-feature-toggle-permission";
-
-const SeuComponente: React.FC = () => (
-  <div>
-    {/* Outro conteúdo aqui */}
-    <Can action="create" context="pix">
-      <Button>Novo Pix</Button>
-    </Can>
-  </div>
-);
-
-export default SeuComponente;
-```
-
-Neste exemplo, o componente `Can` verifica se o usuário tem permissão para realizar a ação de criar um "pix". Se o usuário tiver essa permissão, o botão "Novo Pix" será renderizado; caso contrário, o botão não será exibido na interface do usuário.
-
-Com o componente `Can`, você pode controlar de forma granular e flexível o acesso a diferentes partes da sua aplicação, proporcionando uma experiência personalizada e segura para seus usuários.
-
-Para atualizar as permissões do usuário dentro de um componente React, podemos utilizar o hook `usePermissions` fornecido pela nossa biblioteca da seguinte maneira:
-
-```jsx
-import React, { useEffect } from 'react';
-import { usePermissions } from '@bmg/arqf-feature-toggle-permission';
-
-const SeuComponente: React.fc = () => {
-  const { updatePermissions } = usePermissions();
-
-  useEffect(() => {
-    // Simulação de uma chamada assíncrona para obter novas permissões do usuário
-    const fetchNewPermissions = async () => {
-      try {
-        // Aqui você pode realizar uma requisição à API para obter as novas permissões do usuário
-        const novasPermissoes = await fetchNovasPermissoesDoUsuario();
-        // Atualiza as permissões utilizando o hook updatePermissions
-        updatePermissions(novasPermissoes);
-      } catch (error) {
-        console.error('Erro ao atualizar permissões:', error);
-      }
-    };
-
-    // Chamada da função para obter e atualizar as permissões assim que o componente é montado
-    fetchNewPermissions();
-
-    // Note que neste exemplo, estamos ignorando as dependências do useEffect,
-    // pois queremos apenas executar a busca de permissões uma vez, quando o componente é montado.
-    // Se desejar atualizar as permissões em resposta a mudanças de estado ou de propriedades,
-    // você pode adicionar essas dependências ao array de dependências do useEffect.
-  }, []); // Array de dependências vazio indica que o efeito é executado apenas uma vez, quando o componente é montado.
+  const handleDecrypt = async () => {
+    const decrypted = await crypto.decrypt(encryptedData);
+    setDecryptedData(decrypted);
+  };
 
   return (
-    <div>
-      {/* Conteúdo do componente aqui */}
-    </div>
+    <>
+      <Button onClick={handleEncrypt}>Criptografar Dados</Button>
+      <Button onClick={handleDecrypt}>Descriptografar Dados</Button>
+      <div>
+        <Text>Texto Criptografado: {encryptedData}</Text>
+        <Text>Texto Descriptografado: {decryptedData}</Text>
+      </div>
+    </>
   );
-}
-
-export default SeuComponente;
-```
-
-Neste exemplo, o hook `usePermissions` é utilizado para atualizar dinamicamente as permissões do usuário dentro do componente SeuComponente. Uma chamada assíncrona é realizada para obter as novas permissões do usuário, que são então passadas para a função updatePermissions, garantindo uma experiência de usuário atualizada e personalizada.
-
-A função `can` oferece flexibilidade para realizar renderizações condicionais e lógica de serviço fora do ciclo de renderização de view do React. Além disso, pode ser utilizada para efetuar chamadas condicionais a serviços ou outras operações similares.
-
-```jsx
-import React, { useMemo } from 'react';
-import { Button } from "@bmg-genesis/components";
-import { usePermissions } from '@bmg/arqf-feature-toggle-permission';
-
-const SeuComponente: React.fc = () => {
-  const { can } = usePermissions();
-
-  const show = useMemo(() => can("action", "pix"), [can]);
-
-  return (
-    <div>
-      {/* Conteúdo do componente aqui */}
-      {/* Exemplo de uso da função can para renderizar condicionalmente um botão */}
-      {show && (
-        <Button>Novo Pix</Button>
-      )}
-    </div>
-  );
-}
-
-export default SeuComponente;
-```
-
-Neste exemplo, utilizamos a função `can` para verificar se o usuário tem permissão para realizar a ação de criar um "pix". Se o usuário tiver essa permissão, o botão "Novo Pix" será renderizado; caso contrário, o botão não será exibido na interface do usuário.
-
-A função utilitária `canHandler` foi projetada para ser utilizada fora do contexto do React, permitindo realizar validações a nível de serviço. Esta função aceita parâmetros que configuram seu comportamento, incluindo a ação (`action`), o contexto (`context`), e opcionalmente um objeto de permissões (`permissions`) para substituir as permissões padrão, e um objeto de opções (`options`), que contém callbacks de `yes` e `no` para serem executados em caso de permissão ou não, respectivamente. Se o objeto de opções não for fornecido, a função retornará um booleano indicando se a permissão foi concedida ou não.
-
-```jsx
-import { canHandler } from "@bmg/arqf-feature-toggle-permission";
-
-// Exemplo de configuração para verificar se o usuário pode criar um novo "pix"
-const config = {
-  action: "criar",
-  context: "pix",
-  permissions: {
-    pix: {
-      criar: true,
-    },
-  },
-  options: {
-    yes: () => {
-      console.log("Permissão concedida: usuário pode criar um novo pix");
-      // Lógica para executar caso o usuário tenha permissão
-    },
-    no: () => {
-      console.log("Permissão negada: usuário não pode criar um novo pix");
-      // Lógica para executar caso o usuário não tenha permissão
-    },
-  },
 };
 
-// Chama a função canHandler com a configuração fornecida
-canHandler(config);
+export default MyComponent;
 ```
 
-Neste exemplo, utilizamos a função canHandler para verificar se o usuário tem permissão para criar um novo "pix", com base na configuração fornecida. Se o usuário tiver permissão, o callback `yes` será executado; caso contrário, o callback `no` será executado.
+Neste exemplo, criamos um componente React chamado `MyComponent` que usa a biblioteca `Crypto` para criptografar e descriptografar dados. Quando o usuário clica nos botões "Criptografar Dados" e "Descriptografar Dados", os métodos `encrypt` e `decrypt` são chamados, respectivamente, e o texto criptografado ou descriptografado é exibido na tela.
+
+### Uso simulando um processo de Login
+
+```jsx
+import React, { useState } from "react";
+import { Crypto } from "@bmg-genesis/crypto";
+import { Button, Input, Text } from "@bmg-genesis/components";
+
+// Chaves pública e privada (apenas para fins de demonstração)
+const publicKeyPEM = `-----BEGIN PUBLIC KEY-----\n...`;
+const privateKeyPEM = `-----BEGIN PRIVATE KEY-----\n...`;
+
+// Função de autenticação simulada no servidor
+const simulateServerLogin = async (encryptedCredentials) => {
+  // Aqui você enviaria os dados criptografados para o servidor
+  // para autenticação e receberia uma resposta do servidor
+  // Simularemos retornando um token de acesso para ilustração
+  return "fake_access_token";
+};
+
+const Login: React.FC = () => {
+  const [crypto] = useState(
+    new Crypto({ publicKey: publicKeyPEM, privateKey: privateKeyPEM })
+  );
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [accessToken, setAccessToken] = useState("");
+
+  const handleLogin = async () => {
+    // Concatenando nome de usuário e senha para criar os dados de login
+    const credentials = `${username}:${password}`;
+
+    // Criptografando os dados de login
+    const encryptedCredentials = await crypto.encrypt(credentials);
+
+    try {
+      // Simulando a autenticação no servidor e recebendo o token de acesso
+      const accessToken = await simulateServerLogin(encryptedCredentials);
+      setAccessToken(accessToken);
+    } catch (error) {
+      console.error("Erro ao autenticar:", error);
+    }
+  };
+
+  return (
+    <>
+      <Input
+        type="text"
+        placeholder="Nome de Usuário"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <Input
+        type="password"
+        placeholder="Senha"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <Button onClick={handleLogin}>Login</Button>
+      {accessToken && <Text>Token de Acesso: {accessToken}</Text>}
+    </>
+  );
+};
+
+export default Login;
+```
+
+Neste exemplo, o usuário insere seu nome de usuário e senha, que são criptografados antes de serem enviados para o servidor para autenticação. Após a autenticação bem-sucedida, um token de acesso é recebido do servidor e exibido na tela.
+
+### Uso da criptografia em um serviço
+
+```js
+import { Crypto } from "@bmg-genesis/crypto";
+
+// Chaves pública e privada (apenas para fins de demonstração)
+const publicKeyPEM = `-----BEGIN PUBLIC KEY-----\n...`;
+const privateKeyPEM = `-----BEGIN PRIVATE KEY-----\n...`;
+
+// Função para enviar dados criptografados para o servidor
+const sendDataToServer = async (encryptedData) => {
+  // Aqui você enviaria os dados criptografados para o servidor
+  // Simulamos imprimindo os dados criptografados neste exemplo
+  console.log("Dados criptografados enviados para o servidor:", encryptedData);
+};
+
+// Função de exemplo que utiliza a biblioteca Crypto para criptografar dados
+const encryptSensitiveData = async (data) => {
+  const crypto = new Crypto({
+    publicKey: publicKeyPEM,
+    privateKey: privateKeyPEM,
+  });
+
+  try {
+    // Criptografando os dados sensíveis
+    const encryptedData = await crypto.encrypt(data);
+    // Enviando os dados criptografados para o servidor
+    await sendDataToServer(encryptedData);
+    console.log(
+      "Dados sensíveis criptografados com sucesso e enviados para o servidor."
+    );
+  } catch (error) {
+    console.error("Erro ao criptografar os dados sensíveis:", error);
+  }
+};
+
+// Exemplo de uso da função de criptografia de dados sensíveis
+const sensitiveData = "Dados sensíveis que precisam ser protegidos!";
+encryptSensitiveData(sensitiveData);
+```
+
+Este exemplo demonstra como você pode facilmente integrar a biblioteca `Crypto` em seu serviço para garantir a segurança dos dados sensíveis antes de enviá-los para o servidor.

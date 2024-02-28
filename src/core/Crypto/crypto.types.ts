@@ -1,9 +1,4 @@
-export type Algorithm =
-  | "RSA-OAEP"
-  | "RSA-OAEP-256"
-  | "RSA1_5"
-  | "RSAES-PKCS1-v1_5"
-  | "RSA-PSS";
+export type Algorithm = "RSA-OAEP";
 
 export interface CryptoConfig {
   publicKey?: string;
