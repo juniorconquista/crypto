@@ -39,11 +39,12 @@ Este comando irá extrair a chave pública do arquivo `private_key.pem` e armaze
 
 A classe `Crypto` fornece funcionalidades de criptografia para garantir a segurança dos dados em sua aplicação. Com o `Crypto`, você pode facilmente realizar operações de criptografia e descriptografia usando o algoritmo `RSA-OAEP`.
 
-| Propriedades | Tipo       | Descrição                                                  |
-| ------------ | ---------- | ---------------------------------------------------------- |
-| publicKey    | `string`   | A chave pública no formato PEM.                            |
-| privateKey   | `string`   | A chave privada no formato PEM.                            |
-| algorithm    | `RSA-OAEP` | (Opcional) O algoritmo de criptografia (padrão: RSA-OAEP). |
+| Propriedades | Tipo                                  | Descrição                                                  |
+| ------------ | ------------------------------------- | ---------------------------------------------------------- |
+| publicKey    | `string`                              | A chave pública no formato PEM.                            |
+| privateKey   | `string`                              | A chave privada no formato PEM.                            |
+| algorithm    | `RSA-OAEP`                            | (Opcional) O algoritmo de criptografia (padrão: RSA-OAEP). |
+| algorithm    | `SHA-1`,`SHA-256`,`SHA-384`,`SHA-512` | (Opcional) O algoritmo de criptografia (padrão: RSA-OAEP). |
 
 ## 💻 Uso
 

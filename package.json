@@ -1,7 +1,7 @@
 {
   "name": "@bmg/arqf-crypto",
-  "version": "0.0.0",
-  "description": "",
+  "version": "1.0.0-rc.3",
+  "description": "A nossa biblioteca de criptografia é uma biblioteca JavaScript/TypeScript que oferece uma interface simplificada para operações de criptografia e descriptografia de dados usando o algoritmo RSA-OAEP. Com a capacidade de proteger dados sensíveis de forma eficaz e segura, esta biblioteca é ideal para aplicativos que requerem comunicação segura entre cliente e servidor, armazenamento de informações confidenciais em bancos de dados e muito mais.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -60,5 +60,6 @@
     "tsup": "^8.0.2",
     "typescript": "^5.3.3"
   },
-  "packageManager": "yarn@4.0.2"
+  "packageManager": "yarn@4.0.2",
+  "stableVersion": "0.0.0"
 }

@@ -1,15 +1,17 @@
-import { CryptoConfig, Algorithm } from "./crypto.types";
+import { CryptoConfig, Algorithm, Hash } from "./crypto.types";
 
 class Crypto {
   private textEncoder = new TextEncoder();
   private publicKeyPEM?: string;
   private privateKeyPEM?: string;
   private algorithm?: Algorithm;
+  private hash?: Hash;
 
   constructor(config: CryptoConfig) {
     this.publicKeyPEM = config.publicKey;
     this.privateKeyPEM = config.privateKey;
     this.algorithm = config.algorithm ?? "RSA-OAEP";
+    this.hash = config.hash ?? "SHA-1";
   }
 
   /**
@@ -70,8 +72,11 @@ class Crypto {
       encodedData
     );
 
+    // console.log("encryptedData", encryptedData)
+
     // Convert the encrypted data to hexadecimal pairs
     const encryptedHexArray = new Uint8Array(encryptedData);
+
     const encryptedHexPairs: string[] = [];
     encryptedHexArray.forEach((byte) => {
       encryptedHexPairs.push(byte.toString(16).padStart(2, "0"));
@@ -117,7 +122,7 @@ class Crypto {
       publicKeyData,
       {
         name: this.algorithm as string,
-        hash: { name: "SHA-256" },
+        hash: { name: this.hash as string },
       },
       true,
       ["encrypt"]
@@ -140,7 +145,7 @@ class Crypto {
       privateKeyData,
       {
         name: this.algorithm as string,
-        hash: { name: "SHA-256" },
+        hash: { name: this.hash as string },
       },
       true,
       ["decrypt"]
